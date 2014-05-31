@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+<title>Login Form</title>
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css">
+<style type="text/css">
+label.error {
+	float: none;
+	position: absolute;
+	color: red;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: 1.4;
+	margin-top: 0em;
+	width: 100%;
+	display: none;
+	margin-left: 22%;
+}
+
+#header {
+	background-color: #DE5243 !important;
+	color: white;
+}
+
+#log {
+	background-color: #DE5243;
+	color: white;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script
+	src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
+
+</head>
+<body onload="initialize();">
+
+	<div data-role="page" id="login">
+
+		<div data-role="header" id="header">
+			<h1>User Login Form</h1>
+		</div>
+
+		<div data-role="content">
+
+			<form id="frmLogin" class="validate">
+				<div data-role="fieldcontain">
+					<label for="email"><em>* </em> Email: </label> <input type="text"
+						id="email" name="userName" class="required email" />
+				</div>
+				<br />
+
+				<div data-role="fieldcontain">
+					<label for="password"><em>* </em>Password: </label> <input
+						type="password" id="password" name="userPassword" class="required" />
+				</div>
+				<br />
+
+				<div>
+					<button id="log" class="btnLogin" type="submit" data-theme="a">Login</button>
+				</div>
+				<!-- This div is for displaying result -->
+				<div id="result_id" data-role="fieldcontain"></div>
+			</form>
+
+		</div>
+
+	</div>
+
+</body>
+
+
+<script type="text/javascript">
+	/* creating a function to serialize form  */
+	$.fn.serializeObject = function() {
+		var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+			if (o[this.name] !== undefined) {
+				if (!o[this.name].push) {
+					o[this.name] = [ o[this.name] ];
+				}
+				o[this.name].push(this.value.trim() || '');
+			} else {
+				o[this.name] = this.value.trim() || '';
+			}
+		});
+		return o;
+	};
+	/*initialize() method will excute at onload of this document and initialize validation engine  */
+	function initialize() {
+		/* initializing JQUERY validations on form object this method will validate form when user click on submit button*/
+		$("#frmLogin").validate({
+			submitHandler : function(form) {
+				$.ajax({
+					type : "POST",/*method type  */
+					url : "./app/ws/register_user_post",/*webservice url  */
+					data : JSON.stringify($('#frmLogin').serializeObject()),/*  serializing form data and converting to json string*/
+					success : function(result, status, xhr) {
+						/*if success empty result_id div data  */
+						$('#result_id').empty();
+						for ( var index in result) { //iterating result(JSON Object) and appending to div
+							$('#result_id').append(result[index] + "<br/>");
+						}
+					},
+					contentType : "application/json",
+					dataType : "json"
+				});
+			}
+		});
+	}
+</script>
+
+
+</html>
