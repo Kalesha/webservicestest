@@ -32,7 +32,7 @@ public class RegisterWebService {
 		JsonParser jsonParser = new JsonParser();
 		JsonElement element = jsonParser.parse(user);// parsing received string
 														// to JSON object
-		JsonObject jsonObject = element.getAsJsonObject();
+		JsonObject jsonObject = element.getAsJsonObject();  
 		System.out.println("User Name: " + jsonObject.get("userName"));
 		System.out.println("Password:" + jsonObject.get("userPassword"));
 		ArrayList<String> list = new ArrayList<String>();// ArrayList which
